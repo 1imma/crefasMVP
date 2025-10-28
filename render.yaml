@@ -10,7 +10,7 @@ services:
     startCommand: gunicorn crefasmvp.wsgi:application
     envVars:
       - key: DJANGO_SECRET_KEY
-        value: "your-secret-key-here"  # generate one manually for production
+        value: "DJANGO_SECRET_KEY"  # generate one manually for production
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
