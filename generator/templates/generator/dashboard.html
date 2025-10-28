@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary">CREFAS — AI Creator Toolkit</h2>
+    <p class="text-muted">Generate powerful, SEO-optimized titles, descriptions, and hashtags for your videos in seconds.</p>
+  </div>
+
+  {% if error %}
+  <div class="alert alert-danger text-center">{{ error }}</div>
+  {% endif %}
+
+  <!-- Input Form -->
+  <form method="POST" class="card shadow-lg p-4 border-0 mb-5">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Video Title</label>
+      <input type="text" class="form-control" name="title" placeholder="Enter your video title..." required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Video Description</label>
+      <textarea class="form-control" name="description" rows="3" placeholder="Describe your video..."></textarea>
+    </div>
+
+    <div class="row g-2 mb-3">
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">Platform</label>
+        <select name="platform" class="form-select">
+          <option>YouTube</option>
+          <option>TikTok</option>
+          <option>Instagram Reels</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">Region (optional)</label>
+        <input name="region" class="form-control" placeholder="e.g. Rwanda, Kenya, US" />
+      </div>
+    </div>
+
+    <button class="btn btn-primary w-100 py-2 fw-bold" type="submit">
+      ⚡ Generate Optimization
+    </button>
+  </form>
+
+  {% if result %}
+  <!-- Result Section -->
+  <div class="card shadow p-4 border-0 bg-light">
+    <h4 class="fw-bold text-success mb-3">Your Optimized Content</h4>
+
+    <div class="mb-4">
+      <h6 class="fw-semibold text-secondary">Optimized Title</h6>
+      <div class="input-group">
+        <input id="titleField" class="form-control" type="text" value="{{ result.optimized_title|default:'' }}" readonly>
+        <button class="btn btn-outline-secondary" onclick="copyText('#titleField')">Copy</button>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <h6 class="fw-semibold text-secondary">Optimized Description</h6>
+      <textarea id="descField" class="form-control" rows="4" readonly>{{ result.optimized_description|default:'' }}</textarea>
+      <div class="text-end mt-2">
+        <button class="btn btn-outline-secondary" onclick="copyText('#descField')">Copy</button>
+      </div>
+    </div>
+
+    <div>
+      <h6 class="fw-semibold text-secondary">Hashtags</h6>
+      <div id="hashtagsArea" class="mb-3">
+        {% if result.hashtags %}
+          {% for tag in result.hashtags %}
+            <span class="badge bg-secondary me-1 mb-1">{{ tag }}</span>
+          {% endfor %}
+        {% elif result.raw %}
+          <pre>{{ result.raw }}</pre>
+        {% endif %}
+      </div>
+      <button class="btn btn-success" onclick="copyHashtags()">Copy All Hashtags</button>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- JS Helpers -->
+<script>
+function copyText(selector) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+  el.select ? el.select() : el.focus();
+  navigator.clipboard.writeText(el.value || el.innerText)
+    .then(() => alert('Copied to clipboard'))
+    .catch(() => alert('Copy failed'));
+}
+
+function copyHashtags() {
+  const tags = document.querySelectorAll('#hashtagsArea .badge');
+  const text = Array.from(tags).map(tag => tag.innerText).join(' ');
+  navigator.clipboard.writeText(text)
+    .then(() => alert('Hashtags copied'))
+    .catch(() => alert('Copy failed'));
+}
+</script>
+
+{% endblock %}

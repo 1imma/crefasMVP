@@ -1,0 +1,43 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+env/
+venv/
+ENV/
+*.env
+
+# Django stuff
+*.sqlite3
+db.sqlite3
+/media/
+staticfiles/
+*.log
+
+# Django migrations (optional: usually safe to keep migrations tracked)
+# */migrations/*.py
+# */migrations/*.pyc
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Pytest / coverage
+.coverage
+htmlcov/
+.tox/
+pytest_cache/
+nosetests.xml
+
+# Others
+*.bak
+*.swp
