@@ -2,10 +2,17 @@ services:
   - type: web
     name: crefasmvp
     env: python
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-    startCommand: "gunicorn crefasmvp.wsgi:application"
+    plan: free
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+    startCommand: gunicorn crefasmvp.wsgi:application
     envVars:
       - key: DJANGO_SECRET_KEY
-        generateValue: true
+        value: "your-secret-key-here"  # generate one manually for production
       - key: DEBUG
-        value: False
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "crefasmvp.onrender.com"
+    healthCheckPath: /
